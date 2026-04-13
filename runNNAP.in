@@ -1,0 +1,39 @@
+#############################################################################
+# This file is part of example scripts of NNAP in jse                       #
+# Copyright 2025 Qing'an Li                                                 #
+#                                                                           #
+# This program is free software: you can redistribute it and/or modify      #
+# it under the terms of the GNU General Public License as published by      #
+# the Free Software Foundation, either version 3 of the License, or         #
+# (at your option) any later version.                                       #
+#                                                                           #
+# This program is distributed in the hope that it will be useful,           #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+# GNU General Public License for more details.                              #
+#                                                                           #
+# You should have received a copy of the GNU General Public License         #
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.    #
+#############################################################################
+
+units           metal
+boundary        p p p
+timestep        0.002
+
+lattice         fcc 3.8
+region          box block 0 4 0 4 0 4
+create_box      1 box
+create_atoms    1 box 
+mass            1 63.55
+velocity        all create 6000  4587281
+
+pair_style      jse jsex.nnap.PairNNAP
+pair_coeff      * * nnpot/Cu.json  Cu
+
+fix             1 all nvt temp 2000 2000 0.2
+
+thermo          100
+thermo_style    custom step temp press vol pe ke etotal
+thermo_modify   flush yes
+
+run             4000
